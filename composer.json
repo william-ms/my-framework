@@ -15,8 +15,10 @@
         },
 
         "files": [
+            "app/helpers/constants.php",
             "app/helpers/dotenv.php",
-            "app/helpers/exception.php"
+            "app/helpers/exception.php",
+            "app/helpers/view.php"
         ]
     }
 }

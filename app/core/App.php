@@ -13,6 +13,10 @@ class App
     $method = MethodExtract::extract($controller, $route->method);
     $params = ParamsExtract::extract($uri, $route->uri);
 
-    (new $controller)->$method($params);
+    $request = (new $controller)->$method($params);
+
+    return ($request instanceof View)
+    ? $request->view()
+    : $request;
   }
 }

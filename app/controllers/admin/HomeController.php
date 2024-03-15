@@ -8,6 +8,8 @@ class HomeController extends Controller
 {
   public function index(array $args)
   {
-    echo "<h2>admin home</h2>";
+    return view('admin.home', [
+      'title' => 'Home'
+    ])->extends('admin.main');
   }
 }
