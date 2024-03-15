@@ -1,0 +1,21 @@
+{
+    "name": "william/project-name",
+    "author": "william Sartini",
+    "description": "",
+
+    "minimum-stability": "stable",
+
+    "require": {
+        
+    },
+
+    "autoload": {
+        "psr-4": {
+            "app\\": "app/"
+        },
+
+        "files": [
+
+        ]
+    }
+}
