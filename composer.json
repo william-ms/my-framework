@@ -15,7 +15,8 @@
         },
 
         "files": [
-            "app/helpers/dotenv.php"
+            "app/helpers/dotenv.php",
+            "app/helpers/exception.php"
         ]
     }
 }
