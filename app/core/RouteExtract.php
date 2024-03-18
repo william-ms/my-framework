@@ -2,15 +2,12 @@
 
 namespace app\core;
 
-use app\router\Router;
-use app\library\router\Routes;
+use app\library\routes\Routes;
 
 class RouteExtract
 {
   public static function extract(string $uri): object
   {
-    Router::routes();
-
     $routes = Routes::getRoutes();
 
     $route = self::staticRoute($uri, $routes);

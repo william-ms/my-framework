@@ -13,15 +13,12 @@ function extract_view(string $view)
 
   if(preg_match('/[.\/]/', $view))
   {
-    if(preg_match('/[.\/]/', $view))
-    {
-      [$folder, $view] = extract_folder($view);
-    }
-
-    return (file_exists(VIEW_PATH. $folder . $view .'.php'))
-    ? $folder . $view
-    : throw new Exception("View '{$view}' not found in 'app/views/{$folder}'");
+    [$folder, $view] = extract_folder($view);
   }
+
+  return (file_exists(VIEW_PATH. $folder . $view .'.php'))
+  ? $folder . $view
+  : throw new Exception("View '{$view}' not found in 'app/views/{$folder}'");
 }
 
 function extract_folder($path)
