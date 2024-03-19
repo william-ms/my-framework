@@ -1,5 +1,10 @@
 <?php
 
+function redirect($to)
+{
+  return header("Location: {$to}");
+}
+
 function extract_file($value, $pathType, ?bool $concatenated = false)
 {
   if(preg_match('/[.\/]/', $value))
