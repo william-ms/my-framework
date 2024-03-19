@@ -4,8 +4,10 @@ namespace app\core;
 
 class View
 {
-  protected static string $view;
-  protected static array $data;
+  public static string $view;
+  public static array $data;
+  public static array $css;
+  public static array $scripts;
   protected string $extends;
 
   public function __construct(string $view, ?array $data = null)
@@ -16,7 +18,7 @@ class View
 
   public function view()
   {
-    self::$view = extract_view(self::$view);
+    self::$view = extract_file(self::$view, 'view', true);
     extract(self::$data);
 
     return (isset($this->extends))
@@ -26,17 +28,42 @@ class View
 
   public function extends(string $extends)
   {
-    $this->extends = extract_view($extends);
+    $this->extends = extract_file($extends, 'view', true);
     return $this;
   }
 
-  public static function getView()
+  public function css(string|array $cssList)
   {
-    return self::$view;
+    if(is_array($cssList))
+    {
+      foreach($cssList as $css)
+      {
+        $css = extract_file($css, 'css', true);
+        self::$css[] = '/assets/css/' . $css . '.css';
+      }
+    }
+    else
+    {
+      self::$css[] = '/assets/css/'. extract_file($cssList, 'css', true) . '.css';
+    }
+
+    return $this;
   }
 
-  public static function getData()
+  public function scripts(string|array $scripts)
   {
-    return self::$data;
+    if(is_array($scripts))
+    {
+      foreach($scripts as $script)
+      {
+        self::$scripts[] = '/assets/js/' . extract_file($script, 'js', true) . '.js';
+      }
+    }
+    else
+    {
+      self::$scripts[] = '/assets/js/' . extract_file($scripts, 'js', true) . '.js';
+    }
+
+    return $this;
   }
 }

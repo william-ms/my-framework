@@ -7,7 +7,7 @@
 
     <title><?php echo $title ?></title>
 
-    <link rel="stylesheet" href="<?php echo CSS_PATH; ?>index.css" />
+    <link rel="stylesheet" href="/assets/css/index.css" />
   </head>
 
   <body>
@@ -19,6 +19,6 @@
       <?php include_view(); ?>
     </section>
 
-    <script src="<?php echo JAVASCRIPT_PATH; ?>index.js"></script>
+    <script src="/assets/js/index.js"></script>
   </body>
 </html>

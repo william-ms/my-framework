@@ -7,50 +7,15 @@ function view(string $view, ?array $data = null): View
   return new View($view, $data);
 }
 
-function extract_view(string $view)
-{
-  $folder = '';
-
-  if(preg_match('/[.\/]/', $view))
-  {
-    [$folder, $view] = extract_folder($view);
-  }
-
-  return (file_exists(VIEW_PATH. $folder . $view .'.php'))
-  ? $folder . $view
-  : throw new Exception("View '{$view}' not found in 'app/views/{$folder}'");
-}
-
-function extract_folder($path)
-{
-  $array = preg_split('/[.\/]/', $path);
-  $arrayCount = count($array);
-  
-  $file = $array[$arrayCount-1];
-  $folder = '';
-
-  for($i = 0; $i < $arrayCount-1; $i++)
-  {
-    $folder = $folder . $array[$i] . '/';
-
-    if(!is_dir(VIEW_PATH.$folder))
-    {
-      throw new Exception ("Folder {$array[$i]} not found in app/views/");
-    }
-  }
-
-  return [$folder, $file];
-}
-
 function include_view()
 {
-  extract(View::getData());
-  return require_once(VIEW_PATH. View::getView() .'.php');
+  extract(View::$data);
+  return require_once(VIEW_PATH. View::$view .'.php');
 }
 
 function include_partial(string $partial)
 {
-  [$folder, $partial] = extract_folder($partial);
+  [$folder, $partial] = extract_folder($partial, 'view');
 
   if(!is_dir(VIEW_PATH. $folder .'/partials'))
   {
@@ -62,6 +27,36 @@ function include_partial(string $partial)
     throw new Exception("Partial '{$partial}' not fount in app/views/{$folder}partials");
   }
 
-  extract(View::getData());
+  extract(View::$data);
   return require_once(VIEW_PATH. $folder .'partials/'. $partial .'.php');
+}
+
+function include_css()
+{
+  if(!isset(View::$css))
+  {
+    throw new Exception('You need to pass a value to View::$css to use the include_css function');
+  }
+
+  $cssList = View::$css;
+
+  foreach($cssList as $css)
+  {
+    echo "<link rel='stylesheet' href='{$css}' />";
+  } 
+}
+
+function include_scripts()
+{
+  if(!isset(View::$scripts))
+  {
+    throw new Exception('You need to pass a value to View::$scripts to use the include_scripts function');
+  }
+
+  $scripts = View::$scripts;
+
+  foreach($scripts as $script)
+  {
+    echo "<script src='{$script}'></script>";
+  }
 }
