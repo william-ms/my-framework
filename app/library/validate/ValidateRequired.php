@@ -8,18 +8,51 @@ use app\interfaces\validate\ValidateInterface;
 
 class ValidateRequired implements ValidateInterface
 {
-  public function handle($field, $param)
+  /**
+   * @param string $field Input field name
+   * @param array $params Options to validate input value
+   */
+  public function handle(string $field, array $params)
   {
-    $string = filter_input(INPUT_POST, $field, FILTER_UNSAFE_RAW);
-
-    if ($string === '')
+    if(!isset($_POST[$field]))
     {
-      Flash::set($field, "The {$field} field is required");
+      Flash::set($field, "Select at least one {$field}");
       return false;
     }
 
-    Old::set($field, $string);
+    $value = $_POST[$field];
+    $message = '';
+    
+    [ $value, $message ] = match(gettype($value))
+    {
+      'string' => $this->filter_string($field, $value),
+      'array' => $this->filter_array($field, $value),
+    };
 
-    return $string;
+    if ($value === '')
+    {
+      Flash::set($field, $message);
+      return false;
+    }
+
+    Old::set($field, $value);
+    return $value;
+  }
+  
+  private function filter_string(string $field, string $value)
+  {
+    $value = filter_input(INPUT_POST, $field, FILTER_UNSAFE_RAW);
+
+    return [ $value, "The {$field} field is required" ];
+  }
+
+  private function filter_array(string $field, array $arrayValues, )
+  {
+    foreach($arrayValues as $value)
+    {
+      $values[] = filter_var($value, FILTER_UNSAFE_RAW);
+    }
+
+    return [ $values, "Select at least one {$field}" ];
   }
 }

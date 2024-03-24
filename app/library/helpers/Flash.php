@@ -25,4 +25,15 @@ class Flash
       return $flash;
     }
   }
+
+  public static function make_component($flash)
+  {
+    $component = "
+      <span class='flash-alert alert-{$flash['alert']}'>
+        {$flash['message']}
+      </span>
+    ";
+
+    return $component;
+  }
 }

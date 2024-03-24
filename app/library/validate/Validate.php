@@ -2,25 +2,24 @@
 
 namespace app\library\validate;
 
-use app\core\UriExtract;
 use app\interfaces\validate\ValidateInterface;
 use Exception;
 
 class Validate
 {
   public array $data = [];
-  private bool $errors = false;
+  protected bool $errors = false;
 
-  public function handle(array $validations)
+  public function handle(array $validationsList)
   {
-    foreach($validations as $field => $validation)
+    foreach($validationsList as $field => $validations)
     {
-      if(is_string($validation))
+      if(is_string($validations))
       {
-        $validation = explode('|', $validation);
+        $validations = explode('|', $validations);
       }
 
-      $this->validationInstance($field, $validation);
+      $this->validation_instance($field, $validations);
     }
 
     if(in_array(false, $this->data))
@@ -29,49 +28,61 @@ class Validate
     }
   }
 
-  public function validationInstance(string $field, array $validations)
+  public function validation_instance(string $field, array $validations)
   {
     foreach($validations as $validation)
     {
-      $namespace = "app\\library\\validate\\";
-      $validation = "Validate" . ucfirst(strtolower($validation));
+      $className = $validation;
+      $params = [];
 
-      $class = $namespace . $validation;
+      if(str_contains($validation, ':'))
+      {
+        [ $className, $params ] = $this->extract_params($validation);
+      }
+
+      $namespace = "app\\library\\validate\\";
+      $className = "Validate" . ucfirst(strtolower($className));
+
+      $class = $namespace . $className;
 
       if(!class_exists($class))
       {
-        throw new Exception("Class {$validation} not found in {$namespace}");
+        throw new Exception("Class {$className} not found in {$namespace}");
       }
 
-      [ $class, $param ] = $this->classWithColon($class);
+      if(!in_array(ValidateInterface::class, class_implements($class)))
+      {
+        throw new Exception("Class {$className} not implements ValidateInterface");
+      }
 
-      $this->data[$field] = $this->executeValidation(new $class, $field, $param);
+      $this->data[$field] = $this->execute_validation(new $class, $field, $params);
     }
   }
 
-  private function classWithColon($class)
+  private function extract_params(string $class): array
   {
-    $param = null;
+    $parts = explode(':', $class);
+    $class = $parts[0];
 
-    if(str_contains($class, ':'))
+    foreach($parts as $key => $param)
     {
-      [ $class, $param ] = explode(':', $class);
+      if($key !== 0)
+      {
+        $param = explode('=', $param);
+        $params[$param[0]] = $param[1];
+      }
     }
 
-    return [ $class, $param ];
+    return [ $class, $params ];
   }
 
-  private function executeValidation(ValidateInterface $validateInterface, $field, $param)
+  private function execute_validation(ValidateInterface $validateInterface, string $field, array $params): mixed
   {
-    return $validateInterface->handle($field, $param);
+    return $validateInterface->handle($field, $params);
   }
 
-  public function if_errors(string $to)
+  public function has_errors(): bool
   {
-    if($this->errors)
-    {
-      return header("Location: {$to}");
-    }
+    return $this->errors;
   }
-
 }

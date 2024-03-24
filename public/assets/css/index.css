@@ -12,6 +12,27 @@ html, body {
   height: 100%;
 }
 
-h2 {
-  color: var(--text-color);
+
+/*============================================================================*/
+/*=============================== FLASH MESSAGE ==============================*/
+.flash-alert {
+  display: inline-block;
+  padding: 10px 20px;
+  font-size: 18px;
 }
+
+.alert-danger {
+  color: #d50000;
+  background-color: #ff5252;
+}
+
+.alert-warning {
+  color: #ffa000;
+  background-color: #ffe082;
+}
+
+.alert-success {
+  color: #00c853;
+  background-color: #69f0ae;
+}
+
