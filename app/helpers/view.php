@@ -1,8 +1,9 @@
 <?php
 
 use app\core\View;
+use app\interfaces\core\ViewInterface;
 
-function view(string $view, ?array $data = null): View
+function view(string $view, ?array $data = null): ViewInterface
 {
   return new View($view, $data);
 }
@@ -33,30 +34,26 @@ function include_partial(string $partial)
 
 function include_css()
 {
-  if(!isset(View::$css))
+  if(isset(View::$css))
   {
-    throw new Exception('You need to pass a value to View::$css to use the include_css function');
+    $cssList = View::$css;
+
+    foreach($cssList as $css)
+    {
+      echo "<link rel='stylesheet' href='{$css}' />";
+    } 
   }
-
-  $cssList = View::$css;
-
-  foreach($cssList as $css)
-  {
-    echo "<link rel='stylesheet' href='{$css}' />";
-  } 
 }
 
 function include_scripts()
 {
-  if(!isset(View::$scripts))
+  if(isset(View::$scripts))
   {
-    throw new Exception('You need to pass a value to View::$scripts to use the include_scripts function');
-  }
+    $scripts = View::$scripts;
 
-  $scripts = View::$scripts;
-
-  foreach($scripts as $script)
-  {
-    echo "<script src='{$script}'></script>";
+    foreach($scripts as $script)
+    {
+      echo "<script src='{$script}'></script>";
+    }
   }
 }

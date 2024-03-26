@@ -2,7 +2,9 @@
 
 namespace app\core;
 
-class View
+use app\interfaces\core\ViewInterface;
+
+class View implements ViewInterface
 {
   public static string $view;
   public static array $data;

@@ -23,7 +23,7 @@ function extract_file($value, $pathType, ?bool $concatenated = false)
   {
     if(!file_exists($filePath . $folder . $file .'.'. strtolower($pathType)))
     {
-      throw new Exception("File {$file} not found in {$filePath}{$folder}");
+      throw new Exception("{$pathType} file {$file} not found in {$filePath}{$folder}");
     }
   }
 

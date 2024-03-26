@@ -8,6 +8,7 @@
     <title><?php echo $title ?></title>
 
     <link rel="stylesheet" href="/assets/css/index.css" />
+    <?php include_css(); ?>
   </head>
 
   <body>
@@ -20,5 +21,6 @@
     </section>
 
     <script src="/assets/js/index.js"></script>
+    <?php include_scripts(); ?>
   </body>
 </html>
