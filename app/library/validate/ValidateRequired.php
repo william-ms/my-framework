@@ -12,7 +12,7 @@ class ValidateRequired implements ValidateInterface
    * @param string $field Input field name
    * @param array $params Options to validate input value
    */
-  public function handle(string $field, array $params)
+  public function handle(string $field, array $params): bool
   {
     if(!isset($_POST[$field]))
     {
@@ -21,38 +21,14 @@ class ValidateRequired implements ValidateInterface
     }
 
     $value = $_POST[$field];
-    $message = '';
-    
-    [ $value, $message ] = match(gettype($value))
-    {
-      'string' => $this->filter_string($field, $value),
-      'array' => $this->filter_array($field, $value),
-    };
 
-    if ($value === '')
+    if($value === '')
     {
-      Flash::set($field, $message);
+      Flash::set($field, "The {$field} field is required");
       return false;
     }
 
     Old::set($field, $value);
-    return $value;
-  }
-  
-  private function filter_string(string $field, string $value)
-  {
-    $value = filter_input(INPUT_POST, $field, FILTER_UNSAFE_RAW);
-
-    return [ $value, "The {$field} field is required" ];
-  }
-
-  private function filter_array(string $field, array $arrayValues, )
-  {
-    foreach($arrayValues as $value)
-    {
-      $values[] = filter_var($value, FILTER_UNSAFE_RAW);
-    }
-
-    return [ $values, "Select at least one {$field}" ];
+    return true;
   }
 }

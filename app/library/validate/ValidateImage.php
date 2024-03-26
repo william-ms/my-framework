@@ -12,7 +12,7 @@ class ValidateImage implements ValidateInterface
    * @param string $field File input field name
    * @param array $params Options to validate the file
    */
-  public function handle(string $field, array $params)
+  public function handle(string $field, array $params): bool
   {
     $size = (isset($params['size']))
     ? $params['size']
@@ -45,6 +45,6 @@ class ValidateImage implements ValidateInterface
     }
 
     Old::set($field, $image);
-    return $image;
+    return true;
   }
 }

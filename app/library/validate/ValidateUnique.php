@@ -13,7 +13,7 @@ class ValidateUnique implements ValidateInterface
    * @param string $field Input field name
    * @param array $params Options to validate input value
    */
-  public function handle(string $field, array $params)
+  public function handle(string $field, array $params): bool
   {
     $value = $_POST[$field];
 
@@ -29,12 +29,12 @@ class ValidateUnique implements ValidateInterface
 
     if($prepare->rowCount() > 0)
     {
-      Flash::set($field, "Value {$value} is not unique in table {$params['table']}");
-      Old::set($field, $value);
+      Flash::set($field, "This {$field} is already registered");
+      // Old::set($field, $value);
       return false;
     }
 
     Old::set($field, $value);
-    return $value;
+    return true;
   }
 }

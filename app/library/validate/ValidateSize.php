@@ -12,7 +12,7 @@ class ValidateSize implements ValidateInterface
    * @param string $field Input field name
    * @param array $params Options to validate input value
    */
-  public function handle(string $field, array $params)
+  public function handle(string $field, array $params): bool
   {
     $value = $_POST[$field];
 
@@ -29,6 +29,6 @@ class ValidateSize implements ValidateInterface
     }
 
     Old::set($field, $value);
-    return $value;
+    return true;
   }
 }

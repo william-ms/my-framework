@@ -4,5 +4,5 @@ namespace app\interfaces\validate;
 
 interface ValidateInterface
 {
-  public function handle(string $field, array $params);
+  public function handle(string $field, array $params): bool;
 }

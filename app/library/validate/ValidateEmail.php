@@ -12,7 +12,7 @@ class ValidateEmail implements ValidateInterface
    * @param string $field Email input field name
    * @param array $params Options to validate the email
    */
-  public function handle(string $field, array $params)
+  public function handle(string $field, array $params): bool
   {
     $value = $_POST[$field];
 
@@ -24,6 +24,6 @@ class ValidateEmail implements ValidateInterface
     }
 
     Old::set($field, $value);
-    return $value;
+    return true;
   }
 }
