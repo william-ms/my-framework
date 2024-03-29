@@ -3,26 +3,27 @@
 namespace app\core;
 
 use app\library\routes\Routes;
+use Exception;
 
 class RouteExtract
 {
   public static function extract(string $uri): object
   {
-    $routes = Routes::getRoutes();
+    $routes = Routes::get_routes();
 
-    $route = self::staticRoute($uri, $routes);
+    $route = self::static_route($uri, $routes);
 
     if(empty($route))
     {
-      $route = self::dynamicRoute($uri, $routes);
+      $route = self::dynamic_route($uri, $routes);
     }
 
     return ($route)
     ? $route
-    : throw new \Exception("Route {$uri} not defined");
+    : throw new Exception("Route {$uri} not defined");
   }
 
-  private static function staticRoute(string $uri, array $routes)
+  private static function static_route(string $uri, array $routes)
   {
     if(array_key_exists($uri, $routes))
     {
@@ -30,7 +31,7 @@ class RouteExtract
     }
   }
 
-  private static function dynamicRoute(string $uri, array $routes)
+  private static function dynamic_route(string $uri, array $routes)
   {
     foreach($routes as $key => $route)
     {
