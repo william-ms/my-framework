@@ -10,6 +10,6 @@ class HomeController extends Controller
   {
     return view('admin.home', [
       'title' => 'Home'
-    ])->extends('admin.main');
+    ]);
   }
 }

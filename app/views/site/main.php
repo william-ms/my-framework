@@ -8,19 +8,19 @@
     <title><?php echo $title ?></title>
 
     <link rel="stylesheet" href="/assets/css/index.css" />
-    <?php include_css(); ?>
+    <?=$this->section('css') ?>
   </head>
 
   <body>
     <header>
-      <?php include_partial('site.header'); ?>
+      <?=$this->partial('site.header') ?>
     </header>
 
     <section class="content">
-      <?php include_view(); ?>
+      <?=$this->section('content') ?>
     </section>
 
     <script src="/assets/js/index.js"></script>
-    <?php include_scripts(); ?>
+    <?=$this->section('scripts') ?>
   </body>
 </html>
