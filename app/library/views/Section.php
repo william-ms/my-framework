@@ -23,9 +23,17 @@ class Section
 
   public static function end()
   {
-    (isset(self::$sections[self::$section]))
-    ? self::$sections[self::$section] .= ob_get_contents()
-    : self::$sections[self::$section] = ob_get_contents();
+    if(isset(self::$sections[self::$section]))
+    {
+      if(!str_contains(self::$sections[self::$section], trim(ob_get_contents())))
+      {
+        self::$sections[self::$section] .= ob_get_contents();
+      }
+    }
+    else
+    {
+      self::$sections[self::$section] = ob_get_contents();
+    }
 
     ob_end_clean();
   }
@@ -37,11 +45,9 @@ class Section
 
   public static function get(string $section)
   {
-    if(!isset(self::$sections[$section]))
+    if(isset(self::$sections[$section]))
     {
-      throw new Exception("Section {$section} not defined");
+      return self::$sections[$section];
     }
-
-    return self::$sections[$section];
   }
 }

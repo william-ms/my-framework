@@ -7,7 +7,7 @@
 
     <title><?php echo $title ?></title>
 
-    <link rel="stylesheet" href="/assets/css/index.css" />
+    <link rel="stylesheet" href="<?php echo CSS_PATH; ?>index.css" />
     <?=$this->section('css') ?>
   </head>
 
@@ -20,7 +20,7 @@
       <?=$this->section('content') ?>
     </section>
 
-    <script src="/assets/js/index.js"></script>
+    <script src="<?php echo JS_PATH; ?>index.js"></script>
     <?=$this->section('scripts') ?>
   </body>
 </html>

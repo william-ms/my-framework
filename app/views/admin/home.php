@@ -1,11 +1,11 @@
 <?=$this->extends('admin.main') ?>
 
 <?=$this->section_start('css') ?>
-  <link rel="stylesheet" href="/assets/css/home.css" />
+  <link rel="stylesheet" href="<?php echo CSS_PATH; ?>home.css" />
 <?=$this->section_end() ?>
 
 <?=$this->section_start('scripts') ?>
-  <script src="/assets/js/home.js"></script>
+  <script src="<?php echo JS_PATH; ?>home.js"></script>
 <?=$this->section_end() ?>
 
 <div class="home">
