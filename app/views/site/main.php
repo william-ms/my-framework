@@ -20,6 +20,7 @@
       <?=$this->section('content') ?>
     </section>
 
+    <script src="<?php echo JS_PATH; ?>xhttp.js"></script>
     <script src="<?php echo JS_PATH; ?>index.js"></script>
     <?=$this->section('scripts') ?>
   </body>
