@@ -17,14 +17,16 @@
         "files": [
             "app/routes/routes.php",
 
-            "app/helpers/constants.php",
             "app/helpers/dotenv.php",
             "app/helpers/exception.php",
             "app/helpers/flash.php",
             "app/helpers/macros.php",
             "app/helpers/old.php",
             "app/helpers/session.php",
-            "app/helpers/view.php"
+            "app/helpers/view.php",
+
+            "config/development.php",
+            "config/production.php"
         ]
     }
 }
