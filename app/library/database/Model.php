@@ -15,10 +15,10 @@ abstract class Model implements ModelInterface
 
   public function __construct()
   {
-    $this->entity = $this->setEntity();
+    $this->entity = $this->set_entity();
   }
 
-  private function setEntity()
+  private function set_entity()
   {
     if($this->entity == '')
     {
@@ -51,24 +51,29 @@ abstract class Model implements ModelInterface
     return $action->execute($this);
   }
 
-  public function executeWithRelationship(ActionInterface $action, array $relations)
+  public function execute_with_relationship(ActionInterface $action, array $relations)
   {
-    $relationsCreated = [];
+    $relations_created = [];
     $entities = $action->execute($this);
 
-    foreach($relations as $relationArray)
+    if(!$entities)
     {
-      if(count($relationArray) !== 3)
+      return [];
+    }
+
+    foreach($relations as $relation_array)
+    {
+      if(count($relation_array) !== 3)
       {
         throw new Exception("To make relations, you need to give exactly 3 parameters to relations methods");
       }
 
-      [$class, $relation, $property] = $relationArray;
+      [$class, $relation, $property] = $relation_array;
 
-      $relationsCreated[] = $this->relation($class, $relation, $property, $entities);
+      $relations_created[] = $this->relation($class, $relation, $property, $entities);
     }
 
-    return $this->makeManyRelationsWith(...$relationsCreated);
+    return $this->make_many_relations_with(...$relations_created);
   }
 
   private function relation(string $model, string $relation, string $property, object|array $entities)
@@ -83,19 +88,19 @@ abstract class Model implements ModelInterface
       throw new Exception("Relation {$relation} does not exist");
     }
 
-    $classRelation = new $relation;
+    $relation_instance = new $relation;
 
-    if(!$classRelation instanceof RelationshipInterface)
+    if(!$relation_instance instanceof RelationshipInterface)
     {
       throw new Exception("Class {$relation} is not type RelationshipInterface");
     }
 
-    return $classRelation->createWith(static::class, $model, $property, $entities);
+    return $relation_instance->create(static::class, $model, $property, $entities);
   }
 
-  private function makeManyRelationsWith(...$relations)
+  private function make_many_relations_with(...$relations)
   {
-    $firstRelation = $relations[0];
+    $first_relation = $relations[0];
 
     unset($relations[0]);
 
@@ -105,13 +110,13 @@ abstract class Model implements ModelInterface
 
       foreach($relation->entities as $key => $entity)
       {
-        if(!property_exists($firstRelation->entities[$key], $property))
+        if(!property_exists($first_relation->entities[$key], $property))
         {
-          $firstRelation->entities[$key]->$property = $entity->$property;
+          $first_relation->entities[$key]->$property = $entity->$property;
         }
       }
     }
 
-    return $firstRelation->entities;
+    return $first_relation->entities;
   }
 }

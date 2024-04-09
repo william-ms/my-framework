@@ -7,16 +7,16 @@ use app\library\database\Query;
 
 class RelationshipHasMany extends Relationship
 {
-  public function createWith(string $class, string $relatedClass, string $property, object|array $entities): object
+  public function create(string $model, string $related_model, string $property, object|array $entities): object
   {
-    $relatedShortName = strtolower(self::getModelShortName($relatedClass));
-    $classShortName = strtolower(self::getModelShortName($class)) . '_id';
+    $related_shortname = strtolower(self::getModelShortName($related_model)) . 's';
+    $model_shortname = strtolower(self::getModelShortName($model)) . '_id';
 
-    $relatedKey = $relatedShortName . '.' . $classShortName;
+    $related_key = $related_shortname . '.' . $model_shortname;
 
     (is_array($entities))
-    ? $entities = $this->relationshipWithArray($relatedClass, $property, $entities, $relatedKey, $classShortName)
-    : $entities = $this->relationshipWithSingleEntity($relatedClass, $property, $entities, $relatedKey);
+    ? $entities = $this->relationship_with_array($related_model, $property, $entities, $related_key, $model_shortname)
+    : $entities = $this->relationship_with_single_entity($related_model, $property, $entities, $related_key);
 
     return (object)[
       'entities' => $entities,
@@ -24,41 +24,41 @@ class RelationshipHasMany extends Relationship
     ];
   }
 
-  public function relationshipWithArray($relatedClass, $property, $entities, $relatedKey, $classShortName)
+  private function relationship_with_array($related_model, $property, $entities, $related_key, $model_shortname)
   {
     $ids = array_map(function($entity){
       return $entity->id;
     }, $entities);
 
-    $query = (new Query)->select()->where($relatedKey, 'in', array_unique($ids));
-    $entitiesFromRelated = (new $relatedClass)->execute(new FindAll($query));
+    $query = (new Query)->select()->where($related_key, 'in', array_unique($ids));
+    $entities_from_related = (new $related_model)->execute(new FindAll($query));
 
     foreach($entities as $entity)
     {
-      $arrayEntities = [];
+      $array_entities = [];
 
-      foreach($entitiesFromRelated as $entityFromRelated)
+      foreach($entities_from_related as $entity_from_related)
       {
-        if($entity->id === $entityFromRelated->$classShortName)
+        if($entity->id === $entity_from_related->$model_shortname)
         {
-          $arrayEntities[] = $entityFromRelated;
+          $array_entities[] = $entity_from_related;
         }
       }
 
-      $entity->$property = $arrayEntities;
+      $entity->$property = $array_entities;
     }
 
     return $entities;
   }
 
-  public function relationshipWithSingleEntity($relatedClass, $property, $entity, $relatedKey)
+  private function relationship_with_single_entity($related_model, $property, $entity, $related_key)
   {
     $id[] = $entity->id;
 
-    $query = (new Query)->select()->where($relatedKey, 'in', $id);
-    $entitiesFromRelated = (new $relatedClass)->execute(new FindAll($query));
+    $query = (new Query)->select()->where($related_key, 'in', $id);
+    $entities_from_related = (new $related_model)->execute(new FindAll($query));
 
-    $entity->$property = $entitiesFromRelated;
+    $entity->$property = $entities_from_related;
 
     return $entity;
   }

@@ -15,10 +15,14 @@ class Connection
     {
       if(!static::$pdo)
       {
-        static::$pdo = new PDO("mysql:host=".$_ENV['DB_HOST'].";dbname=".$_ENV['DB_NAME']."",$_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD'], [
-          PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-          PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ
-        ]);
+        $host = DB_HOST;
+        $port = (DB_PORT) ? ':'.DB_PORT : '';
+        $name = DB_NAME;
+        $username = DB_USERNAME;
+        $password = DB_PASSWORD;
+        $options = DB_OPTIONS;
+
+        static::$pdo = new PDO("mysql:host={$host}{$port};dbname={$name}", $username, $password, $options);
       }
 
       return static::$pdo;

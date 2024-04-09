@@ -8,5 +8,5 @@ interface ModelInterface
   public function getEntity();
   public function getTable();
   public function execute(ActionInterface $action);
-  public function executeWithRelationship(ActionInterface $action, array $relations);
+  public function execute_with_relationship(ActionInterface $action, array $relations);
 }

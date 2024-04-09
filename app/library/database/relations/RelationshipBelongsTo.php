@@ -8,15 +8,15 @@ use app\library\database\Query;
 
 class RelationshipBelongsTo extends Relationship
 {
-  public function createWith(string $class, string $relatedClass, string $property, object|array $entities): object
+  public function create(string $model, string $related_model, string $property, object|array $entities): object
   {    
-    $relatedShortName = $this->getModelShortName($relatedClass);
-
-    $relatedKey = strtolower($relatedShortName) . '_id';
+    $related_shortname = $this->getModelShortName($related_model);
+    
+    $related_key = strtolower($related_shortname) . '_id';
 
     (is_array($entities))
-    ? $entities = $this->relationshipWithArray($relatedClass, $property, $entities, $relatedKey)
-    : $entities = $this->relationshipWithSingleEntity($relatedClass, $property, $entities, $relatedKey);
+    ? $entities = $this->relationship_with_array($related_model, $property, $entities, $related_key)
+    : $entities = $this->relationship_with_single_entity($related_model, $property, $entities, $related_key);
 
     return (object)[
       'entities' => $entities,
@@ -24,23 +24,23 @@ class RelationshipBelongsTo extends Relationship
     ];
   }
 
-  private function relationshipWithArray($relatedClass, $property, $entities, $relatedKey)
+  private function relationship_with_array($related_model, $property, $entities, $related_key)
   {
-    $ids = array_map(function($entity) use ($relatedKey)
+    $ids = array_map(function($entity) use ($related_key)
     {
-      return $entity->$relatedKey;
+      return $entity->$related_key;
     }, $entities);
 
     $query = (new Query)->select()->where('id', 'in', array_unique($ids));
-    $entitiesFromRelated = (new $relatedClass)->execute(new FindAll($query));
+    $entities_from_related = (new $related_model)->execute(new FindAll($query));
     
     foreach($entities as $entity)
     {
-      foreach($entitiesFromRelated as $entityFromRelated)
+      foreach($entities_from_related as $entity_from_related)
       {
-        if($entity->$relatedKey === $entityFromRelated->id)
+        if($entity->$related_key === $entity_from_related->id)
         {
-          $entity->$property = $entityFromRelated;
+          $entity->$property = $entity_from_related;
         }
       }
     }
@@ -48,13 +48,13 @@ class RelationshipBelongsTo extends Relationship
     return $entities;
   }
 
-  private function relationshipWithSingleEntity($relatedClass, $property, $entity, $relatedKey)
+  private function relationship_with_single_entity($related_model, $property, $entity, $related_key)
   {
-    $id = $entity->$relatedKey;
+    $id = $entity->$related_key;
 
-    $entityFromRelated = (new $relatedClass)->execute(new FindBy('id', $id));
+    $entity_from_related = (new $related_model)->execute(new FindBy('id', $id));
     
-    $entity->$property = $entityFromRelated;
+    $entity->$property = $entity_from_related;
 
     return $entity;
   }

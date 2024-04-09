@@ -27,7 +27,7 @@ class FindAll extends Action
 
       if(isset($this->query))
       {
-        [$select, $where, $binds, $order, $limit, $offset] = $this->query->queryParts();
+        [$select, $where, $binds, $order, $limit, $offset] = $this->query->query_parts();
        
         $select = $select ?? '*';
 

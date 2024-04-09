@@ -43,20 +43,20 @@ class Query
     return $this->data[$field];
   }
 
-  public function queryParts(?array $parts = null)
+  public function query_parts(?array $parts = null)
   {
-    $queryParts = [];
+    $query_parts = [];
 
     if($parts)
     {
-      foreach ($parts as $queryPart)
+      foreach ($parts as $query_part)
       {
-        $queryParts[] = $this->transform($queryPart);
+        $query_parts[] = $this->transform($query_part);
       }
     }
     else
     {
-      $queryParts = [
+      $query_parts = [
         $this->transform('select'),
         $this->transform('where'),
         $this->transform('binds'),
@@ -66,7 +66,7 @@ class Query
       ];
     }
 
-    return $queryParts;
+    return $query_parts;
   }
 
   private function transform(string $field)

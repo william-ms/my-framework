@@ -3,6 +3,8 @@
 namespace app\library\database\relations;
 
 use app\interfaces\database\RelationshipInterface;
+use Exception;
+use ReflectionClass;
 
 abstract class Relationship implements RelationshipInterface
 {
@@ -10,10 +12,10 @@ abstract class Relationship implements RelationshipInterface
   {
     if(gettype($model) === 'string' && !class_exists($model))
     {
-      throw new \Exception("Model {$model} does not exist");
+      throw new Exception("Model {$model} does not exist");
     }
 
-    $reflect = new \ReflectionClass($model);
+    $reflect = new ReflectionClass($model);
     return str_replace('Model', "", $reflect->getShortName());
   }
 }

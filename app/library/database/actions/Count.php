@@ -26,7 +26,7 @@ class Count extends Action
 
       if(isset($this->query))
       {
-        [$where, $binds] = $this->query->queryParts(['where', 'binds']);
+        [$where, $binds] = $this->query->query_parts(['where', 'binds']);
         $query = "select count(*) as total from {$model->getTable()}{$where}";
       }
 

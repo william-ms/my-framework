@@ -19,6 +19,10 @@ class UserEntity extends Entity
 
   public function setPasswordHash(string $password)
   {
-    $this->attributes['password'] = password_hash($password, PASSWORD_DEFAULT);
+    $options = [
+      'const' => 11
+    ];
+
+    $this->attributes['password'] = password_hash($password, PASSWORD_DEFAULT, $options);
   }
 }
