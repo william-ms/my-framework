@@ -5,11 +5,10 @@ namespace app\library\views;
 class View
 {
   private string $view;
-  private string $content;
   private string $extends;
   private array $data;
   private array $partials;
-  private bool $definedPartial = false;
+  private bool $defined_partial = false;
 
   public function __construct(string $view, array $data)
   {
@@ -23,16 +22,11 @@ class View
     $this->data = array_merge($this->data, $data);
   }
 
-  private function content()
-  {
-    echo $this->content;
-  }
-
   private function partial(string $partial, array $data = [])
   {
-    if($this->definedPartial === false)
+    if($this->defined_partial === false)
     {
-      $this->definedPartial = true;
+      $this->defined_partial = true;
     }
 
     if(!isset($this->partials[$partial]))
@@ -68,7 +62,7 @@ class View
   {
     ob_start();
       extract($this->data);
-      require_once(VIEW_PATH. $this->view .'.php');
+      require_once(PATH['VIEW']. $this->view .'.php');
 
       if(isset($this->extends))
       {
@@ -76,13 +70,12 @@ class View
         ob_clean();
 
         extract($this->data);
+        require(PATH['VIEW']. $this->extends .'.php');
 
-        require(VIEW_PATH. $this->extends .'.php');
-
-        if($this->definedPartial === true)
+        if($this->defined_partial === true)
         {
           ob_clean();
-          require(VIEW_PATH. $this->extends .'.php');
+          require(PATH['VIEW']. $this->extends .'.php');
         }
       }
 

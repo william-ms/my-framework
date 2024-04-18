@@ -13,21 +13,19 @@ class Partial
   {
     $this->data = $data;
 
-    [$partialPath, $partialName] = extract_folder($partial, 'view');
+    [$path, $partial] = $this->check_partial($partial);
 
-    if(is_dir(VIEW_PATH. $partialPath . PARTIALS_FOLDER_DEFAULT))
-    {
-      $partialPath = $partialPath . PARTIALS_FOLDER_DEFAULT .'/';
-    }
+    $controller = $this->check_controller($path, $partial);
 
-    if(!file_exists(VIEW_PATH. $partialPath . $partialName .'.php'))
+    if($controller)
     {
-      throw new Exception("Partial {$partialName} is not fould in views/{$partialPath}");
+      $controller_instance = new $controller;
+      $this->data = array_merge($this->data, $controller_instance->getData());
     }
 
     ob_start();
-      extract($data);
-      require(VIEW_PATH. $partialPath . $partialName .'.php');
+      extract($this->data);
+      require(PATH['VIEW']. $path . $partial .'.php');
       
       $this->content = ob_get_contents();
     ob_end_clean();
@@ -52,5 +50,40 @@ class Partial
   private function section_end()
   {
     return Section::end();
+  }
+
+  private function component(string $component, array $data = [])
+  {
+    echo (new Component($component, $data))->render();
+  }
+
+  private function check_partial($partial)
+  {
+    [$path, $partial] = extract_folder($partial, 'view');
+
+    if(is_dir(PATH['VIEW']. $path . DEFAULTS['PARTIALS_FOLDER']))
+    {
+      $path = $path . DEFAULTS['PARTIALS_FOLDER'] .'/';
+    }
+
+    if(!file_exists(PATH['VIEW']. $path . $partial .'.php'))
+    {
+      throw new Exception("Partial {$partial} is not fould in views/{$path}");
+    }
+
+    return [$path, $partial];
+  }
+
+  private function check_controller($path, $partial)
+  {
+    $namespace = "app\\controllers\\" . str_replace('/', '\\', $path);
+    $controller = ucfirst($partial) . 'Partial';
+
+    if(!class_exists($namespace . $controller))
+    {
+      return null;
+    }
+
+    return $namespace . $controller;
   }
 }
