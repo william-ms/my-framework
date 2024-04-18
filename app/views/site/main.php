@@ -7,7 +7,7 @@
 
     <title><?php echo $title ?></title>
 
-    <link rel="stylesheet" href="<?php echo CSS_PATH; ?>index.css" />
+    <link rel="stylesheet" href="<?php echo PATH['CSS']; ?>index.css" />
     <?=$this->section('css') ?>
   </head>
 
@@ -20,8 +20,8 @@
       <?=$this->section('content') ?>
     </section>
 
-    <script src="<?php echo JS_PATH; ?>xhttp.js"></script>
-    <script src="<?php echo JS_PATH; ?>index.js"></script>
+    <script src="<?php echo PATH['JS']; ?>xhttp.js"></script>
+    <script src="<?php echo PATH['JS']; ?>index.js"></script>
     <?=$this->section('scripts') ?>
   </body>
 </html>

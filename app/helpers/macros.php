@@ -17,7 +17,7 @@ function extract_file($value, $pathType, ?bool $concatenated = false)
     $file = $value;
   }
 
-  $filePath = constant(strtoupper($pathType) . '_PATH');
+  $filePath = PATH[strtoupper($pathType)];
 
   if(!file_exists($filePath . $folder . $file . '.php'))
   {
@@ -37,7 +37,7 @@ function extract_folder($value, $pathType)
   $array = preg_split('/[.\/]/', $value);
   $arrayCount = count($array);
 
-  $filePath = constant(strtoupper($pathType) .'_PATH');
+  $filePath = PATH[strtoupper($pathType)];
   $file = $array[$arrayCount-1];
   $folder = '';
 
@@ -52,4 +52,10 @@ function extract_folder($value, $pathType)
   }
 
   return [$folder, $file];
+}
+
+
+function csrf()
+{
+  return "<input type='hidden' name='csrf' value='{$_SESSION['__csrf']}' />";
 }

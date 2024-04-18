@@ -15,7 +15,7 @@ class Component
     ob_start();
       extract($data);
 
-      require(VIEW_PATH . $component . '.php');
+      require(PATH['VIEW'] . $component . '.php');
 
       $this->content = ob_get_contents();
     ob_end_clean();
@@ -30,12 +30,12 @@ class Component
   {
     [$path, $component] = extract_folder($component, 'view');
 
-    if(is_dir(VIEW_PATH . $path . COMPONENTS_FOLDER_DEFAULT))
+    if(is_dir(PATH['VIEW'] . $path . DEFAULTS['COMPONENTS_FOLDER']))
     {
-      $path .= COMPONENTS_FOLDER_DEFAULT . '/';
+      $path .= DEFAULTS['COMPONENTS_FOLDER'] . '/';
     }
 
-    if(!file_exists(VIEW_PATH. $path . $component .'.php'))
+    if(!file_exists(PATH['VIEW']. $path . $component .'.php'))
     {
       throw new Exception("{$component} component  not found in app/views/{$path}");
     }

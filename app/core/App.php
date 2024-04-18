@@ -4,14 +4,25 @@ namespace app\core;
 
 class App
 {
+  private string $uri;
+  private object $route;
+
+  public function __construct()
+  {
+    require_once('../config/'. $_ENV['ENVIRONMENT'] .'.php');
+  }
+
+  public function route()
+  {
+    $this->uri = UriExtract::extract();
+    $this->route = RouteExtract::extract($this->uri);
+  }
+
   public function controller()
   {
-    $uri = UriExtract::extract();
-    $route = RouteExtract::extract($uri);
-
-    $controller = ControllerExtract::extract($route->controller);
-    $method = MethodExtract::extract($controller, $route->method);
-    $params = ParamsExtract::extract($uri, $route->uri);
+    $controller = ControllerExtract::extract($this->route->controller);
+    $method = MethodExtract::extract($controller, $this->route->method);
+    $params = ParamsExtract::extract($this->uri, $this->route->uri);
 
     return (new $controller)->$method($params);
   }

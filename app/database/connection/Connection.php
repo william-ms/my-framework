@@ -15,12 +15,12 @@ class Connection
     {
       if(!static::$pdo)
       {
-        $host = DB_HOST;
-        $port = (DB_PORT) ? ':'.DB_PORT : '';
-        $name = DB_NAME;
-        $username = DB_USERNAME;
-        $password = DB_PASSWORD;
-        $options = DB_OPTIONS;
+        $host = DB['HOST'];
+        $port = DB['PORT'] ? ':'.DB['PORT'] : '';
+        $name = DB['NAME'];
+        $username = DB['USERNAME'];
+        $password = DB['PASSWORD'];
+        $options = DB['OPTIONS'];
 
         static::$pdo = new PDO("mysql:host={$host}{$port};dbname={$name}", $username, $password, $options);
       }
